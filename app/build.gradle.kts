@@ -7,8 +7,8 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 
-val baseApplicationId = "com.metrolist.music"
-val applicationIdOverride = System.getenv("METROLIST_APPLICATION_ID")?.takeIf { it.isNotBlank() }
+val baseApplicationId = "io.callix_tamilvanan.blackpulse"
+val applicationIdOverride = System.getenv("BLACKPULSE_APPLICATION_ID")?.takeIf { it.isNotBlank() }
 val appNameOverride = System.getenv("METROLIST_APP_NAME")?.takeIf { it.isNotBlank() }
 val buildCommit =
     System.getenv("METROLIST_BUILD_COMMIT")
@@ -33,7 +33,7 @@ plugins {
 }
 
 android {
-    namespace = "com.metrolist.music"
+    namespace = "io.callix_tamilvanan.blackpulse"
     compileSdk = 37
 
     defaultConfig {
@@ -220,7 +220,7 @@ protobuf {
 }
 
 val cleanLegacyProtoSources = tasks.register<Delete>("cleanLegacyProtoSources") {
-    delete(layout.projectDirectory.dir("src/main/java/com/metrolist/music/listentogether/proto"))
+    delete(layout.projectDirectory.dir("src/main/java/io/callix_tamilvanan/blackpulse/listentogether/proto"))
 }
 
 tasks.named("preBuild") {
