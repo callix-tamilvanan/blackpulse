@@ -32,20 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import io.callix_tamilvanan.blackpulse.ui.screens.Screens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.clickable
 
 @Stable
 private fun isRouteSelected(currentRoute: String?, screenRoute: String, navigationItems: List<Screens>): Boolean {
@@ -120,28 +106,22 @@ fun AppNavigationRail(
                 }
             }
 
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(24.dp))
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) {
-                        if (!isSearchItem && !isHomeHoldItem) {
-                            onItemClick(screen, currentIsSelected)
-                        }
+            NavigationRailItem(
+                selected = isSelected,
+                onClick = {
+                    if (!isSearchItem && !isHomeHoldItem) {
+                        onItemClick(screen, currentIsSelected)
                     }
-                    .padding(vertical = 8.dp, horizontal = 4.dp)
-            ) {
-                BasicText(
-                    text = stringResource(screen.titleId),
-                    modifier = Modifier
-                        .verticalRail()
-                        .rotate(-90f)
-                        .padding(horizontal = 12.dp)
-                )
-            }
+                    // Long presses are handled via InteractionSource
+                },
+                interactionSource = interactionSource,
+                icon = {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = stringResource(screen.titleId)
+                    )
+                }
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -236,17 +216,3 @@ fun AppNavigationBar(
         }
     }
 }
-
-
-fun Modifier.verticalRail(enabled: Boolean = true): Modifier =
-    if (enabled)
-        this.layout { measurable, constraints ->
-            val placeable = measurable.measure(constraints.copy(maxWidth = Int.MAX_VALUE))
-            layout(placeable.height, placeable.width) {
-                placeable.place(
-                    x = -(placeable.width / 2 - placeable.height / 2),
-                    y = -(placeable.height / 2 - placeable.width / 2)
-                )
-            }
-        }
-    else this

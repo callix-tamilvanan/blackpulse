@@ -1448,7 +1448,7 @@ fun HomeScreen(
                                 item(key = "speed_dial_list") {
                                     val targetItemSize = 160.dp
                                     val availableWidth = maxWidth - 32.dp
-                                    val columns = (availableWidth / targetItemSize).toInt().coerceAtLeast(3)
+                                    val columns = 2
                                     val rows =
                                         if (columns >= 6) {
                                             1

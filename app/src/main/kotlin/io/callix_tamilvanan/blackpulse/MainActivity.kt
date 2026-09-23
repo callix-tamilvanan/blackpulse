@@ -830,7 +830,7 @@ class MainActivity : FragmentActivity() {
                 val isLandscape = configuration.containerDpSize.width > configuration.containerDpSize.height
                 val isTablet = configuration.containerDpSize.width >= 600.dp
 
-                val showRail = (isLandscape || isTablet) && !inSearchScreen
+                val showRail = true
 
                 val navPadding =
                     if (shouldShowNavigationBar && !showRail) {
