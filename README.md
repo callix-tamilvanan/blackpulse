@@ -57,7 +57,40 @@ cd blackpulse
 # macOS
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
-# Linux
-# export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-
 ./gradlew assembleFossDebug
+The APK will be at app/build/outputs/apk/foss/debug/.
+
+Credits
+Black Pulse stands on the shoulders of incredible open-source work.
+
+Based on:
+
+Metrolist by Mo Agamy and contributors
+
+InnerTune by Zion Huang (Hong) and contributors
+
+Libraries & integrations used:
+
+Better Lyrics — time-synced lyrics
+
+metroserver — listen-together backend
+
+MusicRecognizer — music recognition
+
+zemer-cipher — YouTube cipher deobfuscation
+
+Blacksmith — GitHub Actions runners
+
+Thank you to the entire open-source community.
+
+License
+Licensed under the GNU General Public License v3.0. See LICENSE for details.
+
+This means you are free to use, modify, and redistribute Black Pulse, as long as you keep the same license and credit the original authors.
+
+Disclaimer
+This project is not affiliated with, funded, authorized, endorsed by, or in any way associated with YouTube, Google LLC, Metrolist Group LLC, or any of their affiliates and subsidiaries.
+
+All trademarks, service marks, and intellectual property rights referenced in this project belong to their respective owners.
+
+Made by Callix Tamilvanan
