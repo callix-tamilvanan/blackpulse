@@ -53,5 +53,11 @@ You need Java 17 and the Android SDK.
 ```bash
 git clone https://github.com/callix-tamilvanan/blackpulse.git
 cd blackpulse
-export JAVA_HOME=/path/to/jdk-17
+
+# macOS
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+
+# Linux
+# export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+
 ./gradlew assembleFossDebug
