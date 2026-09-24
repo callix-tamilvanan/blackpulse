@@ -226,6 +226,8 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
+import io.callix_tamilvanan.blackpulse.ui.screens.settings.SettingsSection
+import io.callix_tamilvanan.blackpulse.ui.screens.settings.SettingsNavigationRail
 
 private data class AvailableUpdate(
     val release: ReleaseInfo,
@@ -1234,6 +1236,10 @@ class MainActivity : FragmentActivity() {
                                     }
                                 }
 
+                            var selectedSettingsSection by remember {
+                                mutableStateOf(SettingsSection.ABOUT)
+                            }
+
                             val onRailSearchLongClick: () -> Unit =
                                 remember(navController) {
                                     {
@@ -1244,21 +1250,46 @@ class MainActivity : FragmentActivity() {
                                 }
 
                             if (showRail && currentRoute != "wrapped") {
-                                AppNavigationRail(
-                                    navigationItems = navigationItems,
-                                    currentRoute = currentRoute,
-                                    onItemClick = onRailItemClick,
-                                    pureBlack = pureBlack,
-                                    onSearchLongClick = onRailSearchLongClick,
-                                    onHomeLongHold = { showAccountDialog = true },
-                                    onSettingsClick = {
-                                        if (currentRoute != "settings") {
-                                            navController.navigate("settings") {
-                                                launchSingleTop = true
-                                            }
+                                if (currentRoute == "settings") {
+                                    val context = androidx.compose.ui.platform.LocalContext.current
+                                    val hasAndroidAuto = remember {
+                                        try {
+                                            context.packageManager.getPackageInfo(
+                                                "com.google.android.projection.gearhead", 0
+                                            )
+                                            true
+                                        } catch (e: Exception) {
+                                            false
                                         }
-                                    },
-                                )
+                                    }
+                                    SettingsNavigationRail(
+                                        selected = selectedSettingsSection,
+                                        hasAndroidAuto = hasAndroidAuto,
+                                        onSelect = { section ->
+                                            if (section.route != null) {
+                                                navController.navigate(section.route)
+                                            } else {
+                                                selectedSettingsSection = section
+                                            }
+                                        },
+                                    )
+                                } else {
+                                    AppNavigationRail(
+                                        navigationItems = navigationItems,
+                                        currentRoute = currentRoute,
+                                        onItemClick = onRailItemClick,
+                                        pureBlack = pureBlack,
+                                        onSearchLongClick = onRailSearchLongClick,
+                                        onHomeLongHold = { showAccountDialog = true },
+                                        onSettingsClick = {
+                                            if (currentRoute != "settings") {
+                                                navController.navigate("settings") {
+                                                    launchSingleTop = true
+                                                }
+                                            }
+                                        },
+                                    )
+                                }
                             }
                             Box(Modifier.weight(1f)) {
                                 // NavHost with animations (Material 3 Expressive style)
@@ -1318,6 +1349,7 @@ class MainActivity : FragmentActivity() {
                                         latestVersionName = latestVersionName,
                                         activity = this@MainActivity,
                                         snackbarHostState = snackbarHostState,
+                                        selectedSettingsSection = selectedSettingsSection,
                                     )
                                 }
                             }

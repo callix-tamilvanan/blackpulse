@@ -207,6 +207,7 @@ private fun DeveloperSocials(
 @Composable
 fun AboutScreen(
     navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val uriHandler = LocalUriHandler.current
     val playerConnection = LocalPlayerConnection.current
@@ -411,20 +412,22 @@ fun AboutScreen(
 
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.about)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_back),
-                    contentDescription = stringResource(R.string.cd_back),
-                )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.about)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_back),
+                        contentDescription = stringResource(R.string.cd_back),
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 
     Box(Modifier.fillMaxSize()) {
         SnackbarHost(

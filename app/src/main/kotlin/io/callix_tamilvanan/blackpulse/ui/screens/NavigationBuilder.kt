@@ -69,6 +69,7 @@ import io.callix_tamilvanan.blackpulse.ui.screens.library.LibrarySongsScreen
 import io.callix_tamilvanan.blackpulse.ui.screens.library.LibraryPlaylistsScreen
 import io.callix_tamilvanan.blackpulse.ui.screens.library.LibraryArtistsScreen
 import io.callix_tamilvanan.blackpulse.ui.screens.library.LibraryAlbumsScreen
+import io.callix_tamilvanan.blackpulse.ui.screens.settings.SettingsSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.navigationBuilder(
@@ -77,6 +78,7 @@ fun NavGraphBuilder.navigationBuilder(
     latestVersionName: String,
     activity: Activity,
     snackbarHostState: SnackbarHostState,
+    selectedSettingsSection: SettingsSection,
 ) {
     composable(Screens.Home.route) {
         HomeScreen(snackbarHostState = snackbarHostState)
@@ -380,7 +382,7 @@ fun NavGraphBuilder.navigationBuilder(
     }
 
     composable("settings") {
-        SettingsScreen(navController, latestVersionName)
+        SettingsScreen(navController, latestVersionName, selectedSettingsSection)
     }
 
     composable("settings/appearance") {
