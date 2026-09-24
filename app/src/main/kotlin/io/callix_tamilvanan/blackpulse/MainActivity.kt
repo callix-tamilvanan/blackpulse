@@ -1050,45 +1050,7 @@ class MainActivity : FragmentActivity() {
 
                     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
-                        topBar = {
-                            AnimatedVisibility(
-                                visible = shouldShowTopBar,
-                                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                                exit = fadeOut(animationSpec = tween(durationMillis = 200)),
-                            ) {
-                                Row {
-                                    TopAppBar(
-                                        title = {
-                                            Text(
-                                                text = currentTitleRes?.let { stringResource(it) } ?: "",
-                                                style = MaterialTheme.typography.titleLarge,
-                                                modifier = Modifier.fillMaxWidth(),
-                                                textAlign = androidx.compose.ui.text.style.TextAlign.End,
-                                            )
-                                        },
-                                        actions = {},
-                                        scrollBehavior = topAppBarScrollBehavior,
-                                        colors =
-                                            TopAppBarDefaults.topAppBarColors(
-                                                containerColor = Color.Transparent,
-                                                scrolledContainerColor = Color.Transparent,
-                                                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                                                actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            ),
-                                        modifier =
-                                            Modifier.windowInsetsPadding(
-                                                if (showRail) {
-                                                    WindowInsets(left = NavigationBarHeight)
-                                                        .add(cutoutInsets.only(WindowInsetsSides.Start))
-                                                } else {
-                                                    cutoutInsets.only(WindowInsetsSides.Start + WindowInsetsSides.End)
-                                                },
-                                            ),
-                                    )
-                                }
-                            }
-                        },
+                        // topBar removed
                         bottomBar = {
                             val currentBackStackEntry = navController.currentBackStackEntry // reads reactively outside remember
 
