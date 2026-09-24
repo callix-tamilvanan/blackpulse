@@ -273,25 +273,9 @@ constructor(
                     return@withLock
                 }
 
-                if (shouldSyncWeekly) {
-                    syncMostPlaylist(
-                        playlistId = PlaylistEntity.WEEKLY_MOST_PLAYLIST_ID,
-                        playlistName = context.getString(R.string.weekly_most_playlist_name),
-                        fromTimeStamp = StatPeriod.WEEK_1.toLocalDateTime(),
-                        hideVideoSongs = hideVideoSongs,
-                        now = now,
-                    )
-                }
-
-                if (shouldSyncMonthly) {
-                    syncMostPlaylist(
-                        playlistId = PlaylistEntity.MONTHLY_MOST_PLAYLIST_ID,
-                        playlistName = context.getString(R.string.monthly_most_playlist_name),
-                        fromTimeStamp = StatPeriod.MONTH_1.toLocalDateTime(),
-                        hideVideoSongs = hideVideoSongs,
-                        now = now,
-                    )
-                }
+                // Weekly Most and Monthly Most sync disabled
+                // Clear any existing ones from the database
+                clearMostPlaylists()
 
                 // Only write "last sync" when it was a scheduled sync, not a forced rebuild
                 if (!force) {

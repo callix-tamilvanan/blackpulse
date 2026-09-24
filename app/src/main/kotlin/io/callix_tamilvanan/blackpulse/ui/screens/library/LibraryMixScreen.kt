@@ -257,7 +257,15 @@ fun LibraryMixScreen(
     val albums = viewModel.albums.collectAsStateWithLifecycle()
     val artist = viewModel.artists.collectAsStateWithLifecycle()
     val songs = viewModel.songs.collectAsStateWithLifecycle()
-    val playlist = viewModel.playlists.collectAsStateWithLifecycle()
+    val playlistRaw = viewModel.playlists.collectAsStateWithLifecycle()
+    val playlist = remember(playlistRaw.value) {
+        androidx.compose.runtime.mutableStateOf(
+            playlistRaw.value.filter { p ->
+                p.playlist.id != io.callix_tamilvanan.blackpulse.db.entities.PlaylistEntity.WEEKLY_MOST_PLAYLIST_ID &&
+                p.playlist.id != io.callix_tamilvanan.blackpulse.db.entities.PlaylistEntity.MONTHLY_MOST_PLAYLIST_ID
+            }
+        )
+    }
 
     var allItems = albums.value + artist.value + playlist.value
     val locale = LocalLocale.current.platformLocale
@@ -1108,22 +1116,7 @@ fun LibraryMixScreen(
             }
         }
 
-        // Always visible + button (no scroll hiding)
-        FloatingActionButton(
-            onClick = { showCreatePlaylistDialog = true },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .windowInsetsPadding(
-                    LocalPlayerAwareWindowInsets.current
-                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                )
-                .padding(16.dp)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.add),
-                contentDescription = stringResource(R.string.create_playlist),
-            )
-        }
+        // + FAB removed from Library
 
         Indicator(
             isRefreshing = isRefreshing,

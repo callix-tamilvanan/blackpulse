@@ -131,11 +131,16 @@ fun LibraryPlaylistsScreen(
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val normalizedQuery = remember(searchQuery) { searchQuery.normalizeForSearch() }
-    val filteredPlaylists = remember(playlists, normalizedQuery) {
+    val visiblePlaylists = playlists.filter { playlist ->
+        playlist.playlist.id != io.callix_tamilvanan.blackpulse.db.entities.PlaylistEntity.WEEKLY_MOST_PLAYLIST_ID &&
+        playlist.playlist.id != io.callix_tamilvanan.blackpulse.db.entities.PlaylistEntity.MONTHLY_MOST_PLAYLIST_ID
+    }
+
+    val filteredPlaylists = remember(visiblePlaylists, normalizedQuery) {
         if (normalizedQuery.isBlank()) {
-            playlists
+            visiblePlaylists
         } else {
-            playlists.filter { playlist ->
+            visiblePlaylists.filter { playlist ->
                 matchesNormalizedQuery(normalizedQuery, playlist.playlist.name)
             }
         }
@@ -227,26 +232,6 @@ fun LibraryPlaylistsScreen(
                     ),
                 )
             }
-            if (showDownloadedPlaylist) {
-                add(
-                    VisiblePlaylistItem(
-                        key = "downloadedPlaylist",
-                        playlist = downloadPlaylist,
-                        autoPlaylist = true,
-                        route = "auto_playlist/downloaded",
-                    ),
-                )
-            }
-            if (showCachedPlaylists) {
-                add(
-                    VisiblePlaylistItem(
-                        key = "cachedPlaylist",
-                        playlist = cachedPlaylist,
-                        autoPlaylist = true,
-                        route = "cache_playlist/cached",
-                    ),
-                )
-            }
             if (showTopPlaylists) {
                 add(
                     VisiblePlaylistItem(
@@ -254,16 +239,6 @@ fun LibraryPlaylistsScreen(
                         playlist = topPlaylist,
                         autoPlaylist = true,
                         route = "top_playlist/$topSize",
-                    ),
-                )
-            }
-            if (showUploadedPlaylists) {
-                add(
-                    VisiblePlaylistItem(
-                        key = "uploadedPlaylist",
-                        playlist = uploadedPlaylist,
-                        autoPlaylist = true,
-                        route = "auto_playlist/uploaded",
                     ),
                 )
             }
