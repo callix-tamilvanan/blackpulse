@@ -19,7 +19,7 @@ import io.callix_tamilvanan.blackpulse.utils.rememberEnumPreference
 @Composable
 fun LibraryScreen() {
     val navController = LocalNavController.current
-    var libraryViewType by rememberEnumPreference(AlbumViewTypeKey, LibraryViewType.GRID)
+    var libraryViewType by rememberEnumPreference(AlbumViewTypeKey, LibraryViewType.LIST)
 
     Box(modifier = Modifier.fillMaxSize()) {
         LibraryMixScreen(

@@ -239,9 +239,9 @@ fun LibraryMixScreen(
             songThumbnails = emptyList(),
         )
 
-    val (showLiked) = rememberPreference(ShowLikedPlaylistKey, true)
+    val showLiked = false
     val (showDownloaded) = rememberPreference(ShowDownloadedPlaylistKey, true)
-    val (showTop) = rememberPreference(ShowTopPlaylistKey, true)
+    val showTop = false
     val (showCached) = rememberPreference(ShowCachedPlaylistKey, true)
     val (showUploaded) = rememberPreference(ShowUploadedPlaylistKey, true)
     
@@ -589,6 +589,38 @@ fun LibraryMixScreen(
                                         }.animateItem(),
                             )
                         }
+                    }
+
+                    item(
+                        key = "historyItem",
+                        contentType = { CONTENT_TYPE_PLAYLIST },
+                    ) {
+                        PlaylistListItem(
+                            playlist = historyPlaylist,
+                            autoPlaylist = true,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate("history")
+                                    }.animateItem(),
+                        )
+                    }
+
+                    item(
+                        key = "statsItem",
+                        contentType = { CONTENT_TYPE_PLAYLIST },
+                    ) {
+                        PlaylistListItem(
+                            playlist = statsPlaylist,
+                            autoPlaylist = true,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate("stats")
+                                    }.animateItem(),
+                        )
                     }
 
                     items(
