@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
+import io.callix_tamilvanan.blackpulse.R
 
 @Stable
 private fun isRouteSelected(currentRoute: String?, screenRoute: String, navigationItems: List<Screens>): Boolean {
@@ -70,6 +71,7 @@ fun AppNavigationRail(
     pureBlack: Boolean = false,
     onSearchLongClick: (() -> Unit)? = null,
     onHomeLongHold: (() -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null,
 ) {
     val containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
     val haptics = LocalHapticFeedback.current
@@ -79,6 +81,26 @@ fun AppNavigationRail(
         modifier = modifier,
         containerColor = containerColor
     ) {
+        if (onSettingsClick != null) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable { onSettingsClick() }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.tune),
+                    contentDescription = "Settings",
+                    modifier = Modifier
+                        .size(28.dp)
+                        .rotate(90f),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.weight(1f))
 
         navigationItems.forEach { screen ->

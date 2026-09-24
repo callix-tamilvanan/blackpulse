@@ -1289,6 +1289,7 @@ class MainActivity : FragmentActivity() {
                                     pureBlack = pureBlack,
                                     onSearchLongClick = onRailSearchLongClick,
                                     onHomeLongHold = { showAccountDialog = true },
+                                    onSettingsClick = { navController.navigate("settings") },
                                 )
                             }
                             Box(Modifier.weight(1f)) {
