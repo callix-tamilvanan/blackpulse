@@ -123,7 +123,6 @@ import kotlin.math.roundToInt
 fun AppearanceSettings(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    showTopBar: Boolean = true,
 ) {
     val (dynamicTheme, onDynamicThemeChange) =
         rememberPreference(
@@ -1832,22 +1831,20 @@ fun AppearanceSettings(
         }
     }
 
-    if (showTopBar) {
-        TopAppBar(
-            title = { Text(stringResource(R.string.appearance)) },
-            navigationIcon = {
-                IconButton(
-                    onClick = navController::navigateUp,
-                    onLongClick = navController::backToMain,
-                ) {
-                    Icon(
-                        painterResource(R.drawable.arrow_back),
-                        contentDescription = null,
-                    )
-                }
-            },
-        )
-    }
+    TopAppBar(
+        title = { Text(stringResource(R.string.appearance)) },
+        navigationIcon = {
+            IconButton(
+                onClick = navController::navigateUp,
+                onLongClick = navController::backToMain,
+            ) {
+                Icon(
+                    painterResource(R.drawable.arrow_back),
+                    contentDescription = null,
+                )
+            }
+        },
+    )
 }
 
 enum class DarkMode {
