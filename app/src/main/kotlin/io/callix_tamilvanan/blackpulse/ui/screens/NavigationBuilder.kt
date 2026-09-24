@@ -64,6 +64,11 @@ import io.callix_tamilvanan.blackpulse.ui.screens.settings.integrations.ListenTo
 import io.callix_tamilvanan.blackpulse.ui.screens.wrapped.WrappedScreen
 import io.callix_tamilvanan.blackpulse.utils.rememberEnumPreference
 import io.callix_tamilvanan.blackpulse.utils.rememberPreference
+import io.callix_tamilvanan.blackpulse.constants.LibraryViewType
+import io.callix_tamilvanan.blackpulse.ui.screens.library.LibrarySongsScreen
+import io.callix_tamilvanan.blackpulse.ui.screens.library.LibraryPlaylistsScreen
+import io.callix_tamilvanan.blackpulse.ui.screens.library.LibraryArtistsScreen
+import io.callix_tamilvanan.blackpulse.ui.screens.library.LibraryAlbumsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.navigationBuilder(
@@ -97,6 +102,36 @@ fun NavGraphBuilder.navigationBuilder(
 
     composable(Screens.Library.route) {
         LibraryScreen()
+    }
+
+    composable(Screens.Songs.route) {
+        LibrarySongsScreen(
+            navController = navController,
+            onDeselect = {},
+        )
+    }
+
+    composable(Screens.Playlists.route) {
+        LibraryPlaylistsScreen(
+            navController = navController,
+            filterContent = {},
+            viewType = LibraryViewType.GRID,
+            onViewTypeChange = {},
+        )
+    }
+
+    composable(Screens.Artists.route) {
+        LibraryArtistsScreen(
+            navController = navController,
+            onDeselect = {},
+        )
+    }
+
+    composable(Screens.Albums.route) {
+        LibraryAlbumsScreen(
+            navController = navController,
+            onDeselect = {},
+        )
     }
 
     composable(Screens.ListenTogether.route) {

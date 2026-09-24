@@ -45,7 +45,35 @@ sealed class Screens(
         route = "library"
     )
 
+    object Songs : Screens(
+        titleId = R.string.filter_songs,
+        iconIdInactive = R.drawable.music_note,
+        iconIdActive = R.drawable.music_note,
+        route = "library_songs"
+    )
+
+    object Playlists : Screens(
+        titleId = R.string.filter_playlists,
+        iconIdInactive = R.drawable.playlist_play,
+        iconIdActive = R.drawable.playlist_play,
+        route = "library_playlists"
+    )
+
+    object Artists : Screens(
+        titleId = R.string.filter_artists,
+        iconIdInactive = R.drawable.artist,
+        iconIdActive = R.drawable.artist,
+        route = "library_artists"
+    )
+
+    object Albums : Screens(
+        titleId = R.string.filter_albums,
+        iconIdInactive = R.drawable.album,
+        iconIdActive = R.drawable.album,
+        route = "library_albums"
+    )
+
     companion object {
-        val MainScreens = listOf(Home, Search, ListenTogether, Library)
+        val MainScreens = listOf(Home, Songs, Playlists, Artists, Albums, ListenTogether, Library)
     }
 }

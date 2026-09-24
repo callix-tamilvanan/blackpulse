@@ -72,12 +72,16 @@ fun BoxScope.HideOnScrollFAB(
                 }
                 Spacer(modifier = Modifier.height(12.dp))
             }
-            FloatingActionButton(
+            SmallFloatingActionButton(
                 onClick = onClick,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.size(40.dp)
             ) {
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = null,
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
