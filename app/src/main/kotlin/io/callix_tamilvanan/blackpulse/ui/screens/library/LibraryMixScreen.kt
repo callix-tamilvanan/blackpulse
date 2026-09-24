@@ -217,6 +217,28 @@ fun LibraryMixScreen(
             songThumbnails = emptyList(),
         )
 
+    val historyPlaylist =
+        Playlist(
+            playlist =
+                PlaylistEntity(
+                    id = UUID.randomUUID().toString(),
+                    name = "History",
+                ),
+            songCount = 0,
+            songThumbnails = emptyList(),
+        )
+
+    val statsPlaylist =
+        Playlist(
+            playlist =
+                PlaylistEntity(
+                    id = UUID.randomUUID().toString(),
+                    name = "Stats",
+                ),
+            songCount = 0,
+            songThumbnails = emptyList(),
+        )
+
     val (showLiked) = rememberPreference(ShowLikedPlaylistKey, true)
     val (showDownloaded) = rememberPreference(ShowDownloadedPlaylistKey, true)
     val (showTop) = rememberPreference(ShowTopPlaylistKey, true)
@@ -900,6 +922,40 @@ fun LibraryMixScreen(
                                         }.animateItem(),
                             )
                         }
+                    }
+
+                    item(
+                        key = "historyItem",
+                        contentType = { CONTENT_TYPE_PLAYLIST },
+                    ) {
+                        PlaylistGridItem(
+                            playlist = historyPlaylist,
+                            fillMaxWidth = true,
+                            autoPlaylist = true,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate("history")
+                                    }.animateItem(),
+                        )
+                    }
+
+                    item(
+                        key = "statsItem",
+                        contentType = { CONTENT_TYPE_PLAYLIST },
+                    ) {
+                        PlaylistGridItem(
+                            playlist = statsPlaylist,
+                            fillMaxWidth = true,
+                            autoPlaylist = true,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate("stats")
+                                    }.animateItem(),
+                        )
                     }
 
                     items(
