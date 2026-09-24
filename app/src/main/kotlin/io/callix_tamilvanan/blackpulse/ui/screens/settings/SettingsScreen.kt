@@ -5,48 +5,85 @@
 
 package io.callix_tamilvanan.blackpulse.ui.screens.settings
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.os.Build
-import android.provider.Settings
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import io.callix_tamilvanan.blackpulse.BuildConfig
 import io.callix_tamilvanan.blackpulse.LocalPlayerAwareWindowInsets
 import io.callix_tamilvanan.blackpulse.R
 import io.callix_tamilvanan.blackpulse.ui.component.IconButton
-import io.callix_tamilvanan.blackpulse.ui.component.Material3SettingsGroup
-import io.callix_tamilvanan.blackpulse.ui.component.Material3SettingsItem
-import io.callix_tamilvanan.blackpulse.ui.component.ReleaseNotesCard
 import io.callix_tamilvanan.blackpulse.ui.utils.backToMain
-import io.callix_tamilvanan.blackpulse.utils.Updater
-import androidx.compose.runtime.remember
+
+private enum class SettingsSection(
+    val label: String,
+    val route: String?,
+) {
+    APPEARANCE("Appearance", null),
+    PLAYER("Player", "settings/player"),
+    CONTENT("Content", "settings/content"),
+    AI("AI", "settings/ai"),
+    ANDROID_AUTO("Android Auto", "settings/android_auto"),
+    PRIVACY("Privacy", "settings/privacy"),
+    STORAGE("Storage", "settings/storage"),
+    BACKUP("Backup", "settings/backup_restore"),
+    UPDATER("Updater", "settings/updater"),
+    ABOUT("About", "settings/about"),
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
     latestVersionName: String,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    val uriHandler = LocalUriHandler.current
+    var selectedSection by rememberSaveable { mutableStateOf(SettingsSection.APPEARANCE) }
     val context = LocalContext.current
     val isAndroid12OrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val hasAndroidAuto = remember {
@@ -60,177 +97,115 @@ fun SettingsScreen(
         }
     }
 
-    Column(
-        Modifier
-            .windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(
+                LocalPlayerAwareWindowInsets.current
+                    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+            )
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top
-                )
-            )
+        // Left rail
+        SettingsRail(
+            selected = selectedSection,
+            hasAndroidAuto = hasAndroidAuto,
+            onSelect = { section ->
+                if (section.route != null) {
+                    navController.navigate(section.route)
+                } else {
+                    selectedSection = section
+                }
+            }
         )
 
-        // User Interface Section
-        Material3SettingsGroup(
-            title = stringResource(R.string.settings_section_ui),
-            items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.palette),
-                    title = { Text(stringResource(R.string.appearance)) },
-                    onClick = { navController.navigate("settings/appearance") }
-                )
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Player & Content Section (moved up and combined with content)
-        Material3SettingsGroup(
-            title = stringResource(R.string.settings_section_player_content),
-            items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.play),
-                    title = { Text(stringResource(R.string.player_and_audio)) },
-                    onClick = { navController.navigate("settings/player") }
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.language),
-                    title = { Text(stringResource(R.string.content)) },
-                    onClick = { navController.navigate("settings/content") }
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.translate),
-                    title = { Text(stringResource(R.string.ai_lyrics_translation)) },
-                    onClick = { navController.navigate("settings/ai") }
-                )
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Android Auto Section — only shown if Android Auto is installed
-        if (hasAndroidAuto) {
-            Material3SettingsGroup(
-                title = "Android Auto",
-                items = listOf(
-                    Material3SettingsItem(
-                        icon = painterResource(R.drawable.ic_android_auto),
-                        title = { Text(stringResource(R.string.android_auto)) },
-                        onClick = { navController.navigate("settings/android_auto") }
-                    )
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        
-        // Privacy & Security Section
-        Material3SettingsGroup(
-            title = stringResource(R.string.settings_section_privacy),
-            items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.security),
-                    title = { Text(stringResource(R.string.privacy)) },
-                    onClick = { navController.navigate("settings/privacy") }
-                )
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Storage & Data Section
-        Material3SettingsGroup(
-            title = stringResource(R.string.settings_section_storage),
-            items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.storage),
-                    title = { Text(stringResource(R.string.storage)) },
-                    onClick = { navController.navigate("settings/storage") }
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.restore),
-                    title = { Text(stringResource(R.string.backup_restore)) },
-                    onClick = { navController.navigate("settings/backup_restore") }
-                )
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // System & About Section
-        Material3SettingsGroup(
-            title = stringResource(R.string.settings_section_system),
-            items = buildList {
-                // Open supported links entry removed
-                if (BuildConfig.UPDATER_AVAILABLE) {
-                    add(
-                        Material3SettingsItem(
-                            icon = painterResource(R.drawable.update),
-                            title = { Text(stringResource(R.string.updater)) },
-                            onClick = { navController.navigate("settings/updater") }
-                        )
+        // Right content
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top))
+        ) {
+            when (selectedSection) {
+                SettingsSection.APPEARANCE -> {
+                    AppearanceSettings(
+                        navController = navController,
+                        snackbarHostState = snackbarHostState,
+                        showTopBar = false,
                     )
                 }
-                // Changelog entry removed
-                add(
-                    Material3SettingsItem(
-                        icon = painterResource(R.drawable.info),
-                        title = { Text(stringResource(R.string.about)) },
-                        onClick = { navController.navigate("settings/about") }
-                    )
-                )
-                if (BuildConfig.UPDATER_AVAILABLE && latestVersionName != BuildConfig.BASE_VERSION_NAME) {
-                    val releaseInfo = Updater.getCachedLatestRelease()
-                    val downloadUrl = releaseInfo?.let { Updater.getDownloadUrlForCurrentVariant(it) }
-
-                    if (downloadUrl != null) {
-                        add(
-                            Material3SettingsItem(
-                                icon = painterResource(R.drawable.update),
-                                title = { 
-                                    Text(
-                                        text = stringResource(R.string.new_version_available),
-                                    )
-                                },
-                                description = {
-                                    Text(
-                                        text = latestVersionName,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                },
-                                showBadge = true,
-                                onClick = { uriHandler.openUri(downloadUrl) }
-                            )
+                else -> {
+                    // Non-converted sections — fallback placeholder
+                    // (Users navigate away immediately, so this rarely shows)
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = selectedSection.label,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
             }
-        )
-    if (BuildConfig.UPDATER_AVAILABLE && latestVersionName != BuildConfig.BASE_VERSION_NAME) {
-            Spacer(modifier = Modifier.height(16.dp))
-            ReleaseNotesCard()
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
+}
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.settings)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain
+@Composable
+private fun SettingsRail(
+    selected: SettingsSection,
+    hasAndroidAuto: Boolean,
+    onSelect: (SettingsSection) -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState())
+            .padding(vertical = 12.dp),
+    ) {
+        SettingsSection.entries.forEach { section ->
+            if (section == SettingsSection.ANDROID_AUTO && !hasAndroidAuto) return@forEach
+
+            val isSelected = section == selected
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+                        else Color.Transparent
+                    )
+                    .clickable { onSelect(section) },
             ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null
+                Text(
+                    text = section.label,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                    color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .verticalRailSettings()
+                        .rotate(-90f),
                 )
             }
         }
-    )
+    }
 }
+
+private fun Modifier.verticalRailSettings(enabled: Boolean = true): Modifier =
+    if (enabled)
+        this.layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints.copy(maxWidth = Int.MAX_VALUE))
+            layout(placeable.height, placeable.width) {
+                placeable.place(
+                    x = -(placeable.width / 2 - placeable.height / 2),
+                    y = -(placeable.height / 2 - placeable.width / 2),
+                )
+            }
+        }
+    else this
