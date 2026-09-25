@@ -484,16 +484,9 @@ fun AiSettings(
                     WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom,
                 ),
             ).verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp),
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top,
-                ),
-            ),
-        )
-
         Material3SettingsGroup(
             title = stringResource(R.string.ai_provider),
             items =

@@ -48,7 +48,8 @@ import io.callix_tamilvanan.blackpulse.utils.rememberPreference
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivacySettings(
-    navController: NavController
+    navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val database = LocalDatabase.current
     val (pauseListenHistory, onPauseListenHistoryChange) = rememberPreference(
@@ -143,15 +144,8 @@ fun PrivacySettings(
             )
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
+            .padding(top = 24.dp)
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top
-                )
-            )
-        )
-
         Material3SettingsGroup(
             title = stringResource(R.string.listen_history),
             items = listOf(
@@ -247,18 +241,20 @@ fun PrivacySettings(
         Spacer(modifier = Modifier.height(16.dp))
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.privacy)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
-            }
-        }
-    )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.privacy)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.arrow_back),
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+    }
 }

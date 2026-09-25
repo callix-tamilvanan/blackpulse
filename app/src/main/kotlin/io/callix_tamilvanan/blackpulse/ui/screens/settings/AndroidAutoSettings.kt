@@ -154,9 +154,9 @@ fun AndroidAutoSettings(
 
     Column(
         modifier = Modifier
-            .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
+            .padding(top = 24.dp)
     ) {
         // Visible sections
         Material3SettingsGroup(
