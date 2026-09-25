@@ -77,6 +77,12 @@ fun SettingsScreen(
                         showTopBar = false,
                     )
                 }
+                SettingsSection.AI -> {
+                    AiSettings(
+                        navController = navController,
+                        showTopBar = false,
+                    )
+                }
                 else -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
