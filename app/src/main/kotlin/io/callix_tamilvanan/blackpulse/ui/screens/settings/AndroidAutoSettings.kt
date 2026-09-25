@@ -95,6 +95,7 @@ fun deserializeSections(raw: String): List<Pair<AndroidAutoSection, Boolean>> {
 @Composable
 fun AndroidAutoSettings(
     navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val haptic = LocalHapticFeedback.current
     val database = LocalDatabase.current
@@ -367,18 +368,20 @@ fun AndroidAutoSettings(
         Spacer(Modifier.height(27.dp))
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.android_auto)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
-            }
-        },
-    )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.android_auto)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.arrow_back),
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+    }
 }

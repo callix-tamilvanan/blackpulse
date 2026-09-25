@@ -83,6 +83,12 @@ fun SettingsScreen(
                         showTopBar = false,
                     )
                 }
+                SettingsSection.ANDROID_AUTO -> {
+                    AndroidAutoSettings(
+                        navController = navController,
+                        showTopBar = false,
+                    )
+                }
                 else -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),

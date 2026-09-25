@@ -14,7 +14,7 @@ enum class SettingsSection(
     PLAYER("Player", "settings/player"),
     CONTENT("Content", "settings/content"),
     AI("AI", null),
-    ANDROID_AUTO("Android Auto", "settings/android_auto"),
+    ANDROID_AUTO("Android Auto", null),
     PRIVACY("Privacy", "settings/privacy"),
     STORAGE("Storage", "settings/storage"),
     BACKUP("Backup", "settings/backup_restore"),
