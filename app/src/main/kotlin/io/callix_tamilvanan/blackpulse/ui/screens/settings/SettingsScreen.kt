@@ -95,6 +95,12 @@ fun SettingsScreen(
                         showTopBar = false,
                     )
                 }
+                SettingsSection.STORAGE -> {
+                    StorageSettings(
+                        navController = navController,
+                        showTopBar = false,
+                    )
+                }
                 else -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),

@@ -16,7 +16,7 @@ enum class SettingsSection(
     AI("AI", null),
     ANDROID_AUTO("Android Auto", null),
     PRIVACY("Privacy", null),
-    STORAGE("Storage", "settings/storage"),
+    STORAGE("Storage", null),
     BACKUP("Backup", "settings/backup_restore"),
     UPDATER("Updater", "settings/updater"),
 }

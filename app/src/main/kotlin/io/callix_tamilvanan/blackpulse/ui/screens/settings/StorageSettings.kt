@@ -69,11 +69,13 @@ import kotlinx.coroutines.launch
 import okio.ByteString.Companion.encodeUtf8
 import java.io.File
 import kotlin.math.roundToInt
+import androidx.compose.foundation.layout.height
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class, DelicateCoilApi::class)
 @Composable
 fun StorageSettings(
-    navController: NavController
+    navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
@@ -287,15 +289,9 @@ fun StorageSettings(
                     WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom,
                 ),
             ).verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp),
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top,
-                ),
-            ),
-        )
         Material3SettingsGroup(
             title = stringResource(R.string.storage),
             items =
@@ -349,13 +345,6 @@ fun StorageSettings(
                         val songCacheValues =
                             remember { listOf(0, 128, 256, 512, 1024, 2048, 4096, 8192, -1) }
                         Column {
-                            Text(
-                                text = when (maxSongCacheSize) {
-                                    0 -> stringResource(R.string.disable)
-                                    -1 -> stringResource(R.string.unlimited)
-                                    else -> Formatter.formatShortFileSize(context, maxSongCacheSize * 1024 * 1024L)
-                                }
-                            )
                             Slider(
                                 value = songCacheValues.indexOf(maxSongCacheSize).toFloat(),
                                 enabled = enableSongCache,
@@ -378,13 +367,8 @@ fun StorageSettings(
                                     },
                                     steps = songCacheValues.size - 2,
                                     valueRange = 0f..(songCacheValues.size - 1).toFloat(),
+                                    modifier = Modifier.height(20.dp),
                                 )
-                                LinearProgressIndicator(
-                                    progress = { playerCacheProgress },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    strokeCap = StrokeCap.Round,
-                                )
-                                Spacer(modifier = Modifier.padding(2.dp))
                                 Text(
                                     text =
                                         if (maxSongCacheSize == -1) {
@@ -396,7 +380,7 @@ fun StorageSettings(
                                                 )
                                             }"
                                         },
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodySmall,
                                 )
                             }
                         },
@@ -422,13 +406,6 @@ fun StorageSettings(
                             val imageCacheValues =
                                 remember { listOf(0, 128, 256, 512, 1024, 2048, 4096, 8192) }
                             Column {
-                                Text(
-                                    text =
-                                        when (maxImageCacheSize) {
-                                            0 -> stringResource(R.string.disable)
-                                            else -> Formatter.formatShortFileSize(context, maxImageCacheSize * 1024 * 1024L)
-                                        },
-                                )
                                 Slider(
                                     value = imageCacheValues.indexOf(maxImageCacheSize).toFloat(),
                                     onValueChange = {
@@ -446,20 +423,18 @@ fun StorageSettings(
                                     },
                                     steps = imageCacheValues.size - 2,
                                     valueRange = 0f..(imageCacheValues.size - 1).toFloat(),
+                                    modifier = Modifier.height(20.dp),
                                 )
-                                LinearProgressIndicator(
-                                    progress = { imageCacheProgress },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    strokeCap = StrokeCap.Round,
-                                )
-                                Spacer(modifier = Modifier.padding(2.dp))
                                 Text(
-                                    text = "${Formatter.formatShortFileSize(context, imageCacheSize)} / ${
-                                        Formatter.formatShortFileSize(context, 
-                                            maxImageCacheSize * 1024 * 1024L,
-                                        )
+                                    text = "${
+                                        Formatter.formatShortFileSize(context, imageCacheSize)
+                                    } / ${
+                                        when (maxImageCacheSize) {
+                                            0 -> stringResource(R.string.disable)
+                                            else -> Formatter.formatShortFileSize(context, maxImageCacheSize * 1024 * 1024L)
+                                        }
                                     }",
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodySmall,
                                 )
                             }
                         },
@@ -475,18 +450,20 @@ fun StorageSettings(
         )
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.storage)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
-            }
-        },
-    )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.storage)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.arrow_back),
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+    }
 }
