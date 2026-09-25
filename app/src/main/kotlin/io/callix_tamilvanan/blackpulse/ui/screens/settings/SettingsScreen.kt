@@ -33,9 +33,9 @@ import io.callix_tamilvanan.blackpulse.LocalPlayerAwareWindowInsets
 fun SettingsScreen(
     navController: NavController,
     latestVersionName: String,
-    selectedSection: SettingsSection,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
+    val selectedSection = LocalSelectedSettingsSection.current
     val context = LocalContext.current
     val hasAndroidAuto = remember {
         try {

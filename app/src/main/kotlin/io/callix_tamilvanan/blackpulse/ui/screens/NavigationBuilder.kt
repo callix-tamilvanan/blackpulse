@@ -78,7 +78,6 @@ fun NavGraphBuilder.navigationBuilder(
     latestVersionName: String,
     activity: Activity,
     snackbarHostState: SnackbarHostState,
-    selectedSettingsSection: SettingsSection,
 ) {
     composable(Screens.Home.route) {
         HomeScreen(snackbarHostState = snackbarHostState)
@@ -382,7 +381,7 @@ fun NavGraphBuilder.navigationBuilder(
     }
 
     composable("settings") {
-        SettingsScreen(navController, latestVersionName, selectedSettingsSection)
+        SettingsScreen(navController, latestVersionName)
     }
 
     composable("settings/appearance") {

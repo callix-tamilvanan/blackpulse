@@ -228,6 +228,7 @@ import java.util.Locale
 import javax.inject.Inject
 import io.callix_tamilvanan.blackpulse.ui.screens.settings.SettingsSection
 import io.callix_tamilvanan.blackpulse.ui.screens.settings.SettingsNavigationRail
+import io.callix_tamilvanan.blackpulse.ui.screens.settings.LocalSelectedSettingsSection
 
 private data class AvailableUpdate(
     val release: ReleaseInfo,
@@ -1211,6 +1212,12 @@ class MainActivity : FragmentActivity() {
                                 .fillMaxSize()
                                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                     ) {
+                        var selectedSettingsSection by remember {
+                            mutableStateOf(SettingsSection.ABOUT)
+                        }
+                        CompositionLocalProvider(
+                            LocalSelectedSettingsSection provides selectedSettingsSection,
+                        ) {
                         Row(Modifier.fillMaxSize()) {
                             val onRailItemClick: (Screens, Boolean) -> Unit =
                                 remember(navController, coroutineScope, topAppBarScrollBehavior, playerBottomSheetState) {
@@ -1235,10 +1242,6 @@ class MainActivity : FragmentActivity() {
                                         }
                                     }
                                 }
-
-                            var selectedSettingsSection by remember {
-                                mutableStateOf(SettingsSection.ABOUT)
-                            }
 
                             val onRailSearchLongClick: () -> Unit =
                                 remember(navController) {
@@ -1349,10 +1352,10 @@ class MainActivity : FragmentActivity() {
                                         latestVersionName = latestVersionName,
                                         activity = this@MainActivity,
                                         snackbarHostState = snackbarHostState,
-                                        selectedSettingsSection = selectedSettingsSection,
                                     )
                                 }
                             }
+                        }
                         }
                     }
 
