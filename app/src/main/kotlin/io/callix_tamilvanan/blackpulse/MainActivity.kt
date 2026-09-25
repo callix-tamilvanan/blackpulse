@@ -1215,6 +1215,12 @@ class MainActivity : FragmentActivity() {
                         var selectedSettingsSection by remember {
                             mutableStateOf(SettingsSection.ABOUT)
                         }
+                        // Reset to About whenever we leave the Settings screen
+                        androidx.compose.runtime.LaunchedEffect(currentRoute) {
+                            if (currentRoute != "settings") {
+                                selectedSettingsSection = SettingsSection.ABOUT
+                            }
+                        }
                         CompositionLocalProvider(
                             LocalSelectedSettingsSection provides selectedSettingsSection,
                         ) {

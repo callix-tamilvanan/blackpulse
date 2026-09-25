@@ -897,9 +897,9 @@ fun AppearanceSettings(
 
     Column(
         Modifier
-            .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp),
     ) {
         Material3SettingsGroup(
             title = stringResource(R.string.theme),
