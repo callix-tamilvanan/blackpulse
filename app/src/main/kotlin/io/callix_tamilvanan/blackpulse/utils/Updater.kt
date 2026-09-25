@@ -98,6 +98,7 @@ object Updater {
             
             // Parse architecture and variant from filename
             val (arch, variant) = when {
+                name.startsWith("blackpulse-") && name.endsWith(".apk") -> "universal" to "foss"
                 name == "Metrolist.apk" -> "universal" to "foss"
                 name == "Metrolist-with-Google-Cast.apk" -> "universal" to "gms"
                 name.startsWith("app-") && name.endsWith("-release.apk") -> {
