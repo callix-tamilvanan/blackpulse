@@ -93,7 +93,8 @@ import io.callix_tamilvanan.blackpulse.ui.utils.getLoudnessLevelLabel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerSettings(
-    navController: NavController
+    navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val (audioQuality, onAudioQualityChange) = rememberEnumPreference(
         AudioQualityKey,
@@ -274,15 +275,8 @@ fun PlayerSettings(
             )
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
+            .padding(top = 24.dp)
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top
-                )
-            )
-        )
-
         Material3SettingsGroup(
             title = stringResource(R.string.player),
             items = buildList {
@@ -1091,18 +1085,20 @@ fun PlayerSettings(
         Spacer(modifier = Modifier.height(16.dp))
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.player_and_audio)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain
-            ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null
-                )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.player_and_audio)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain
+                ) {
+                    Icon(
+                        painterResource(R.drawable.arrow_back),
+                        contentDescription = null
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }

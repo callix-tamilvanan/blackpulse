@@ -11,7 +11,7 @@ enum class SettingsSection(
 ) {
     ABOUT("About", null),
     APPEARANCE("Appearance", null),
-    PLAYER("Player", "settings/player"),
+    PLAYER("Player", null),
     CONTENT("Content", null),
     AI("AI", null),
     ANDROID_AUTO("Android Auto", null),

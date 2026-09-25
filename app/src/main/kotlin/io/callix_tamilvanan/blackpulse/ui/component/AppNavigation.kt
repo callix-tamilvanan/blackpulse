@@ -47,6 +47,8 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
 import io.callix_tamilvanan.blackpulse.R
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.layout.Arrangement
 
 @Stable
 private fun isRouteSelected(currentRoute: String?, screenRoute: String, navigationItems: List<Screens>): Boolean {
@@ -78,7 +80,7 @@ fun AppNavigationRail(
     val viewConfiguration = LocalViewConfiguration.current
 
     NavigationRail(
-        modifier = modifier,
+        modifier = modifier.width(64.dp),
         containerColor = containerColor
     ) {
         if (onSettingsClick != null) {
@@ -94,9 +96,9 @@ fun AppNavigationRail(
                     painter = painterResource(R.drawable.tune),
                     contentDescription = "Settings",
                     modifier = Modifier
-                        .size(28.dp)
+                        .size(24.dp)
                         .rotate(90f),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -142,10 +144,10 @@ fun AppNavigationRail(
                 }
             }
 
-            Box(
-                contentAlignment = Alignment.Center,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(24.dp))
                     .clickable(
                         interactionSource = interactionSource,
                         indication = null
@@ -154,14 +156,29 @@ fun AppNavigationRail(
                             onItemClick(screen, currentIsSelected)
                         }
                     }
-                    .padding(vertical = 8.dp, horizontal = 4.dp)
+                    .padding(vertical = 8.dp)
             ) {
+                if (isSelected) {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(end = 4.dp)
+                    )
+                }
                 BasicText(
                     text = stringResource(screen.titleId),
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (isSelected) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
                     modifier = Modifier
                         .verticalRail()
                         .rotate(-90f)
-                        .padding(horizontal = 12.dp)
+                        .padding(horizontal = 8.dp)
                 )
             }
         }
