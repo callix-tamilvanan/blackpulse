@@ -352,7 +352,10 @@ class HomeViewModel @Inject constructor(
                     .shuffled()
                     .take(20)
 
-                quickPicks.value = combined.ifEmpty { relatedSongs.shuffled().take(20) }
+                quickPicks.value = combined.ifEmpty {
+                    val allSongs = database.allSongs().first().filterVideoSongs(hideVideoSongs)
+                    allSongs.shuffled().take(20)
+                }
             }
             QuickPicks.LAST_LISTEN -> {
                 val song = database.latestEvent().first()?.song

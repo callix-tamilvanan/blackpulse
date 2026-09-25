@@ -49,6 +49,8 @@ import androidx.compose.foundation.clickable
 import io.callix_tamilvanan.blackpulse.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.fillMaxWidth
 
 @Stable
 private fun isRouteSelected(currentRoute: String?, screenRoute: String, navigationItems: List<Screens>): Boolean {
@@ -80,30 +82,30 @@ fun AppNavigationRail(
     val viewConfiguration = LocalViewConfiguration.current
 
     NavigationRail(
-        modifier = modifier.width(64.dp),
+        modifier = modifier
+            .width(64.dp)
+            .padding(top = 56.dp),
         containerColor = containerColor
     ) {
         if (onSettingsClick != null) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(24.dp))
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 8.dp, start = 14.dp)
+                    .height(40.dp)
                     .clickable { onSettingsClick() }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.tune),
                     contentDescription = "Settings",
                     modifier = Modifier
-                        .size(24.dp)
-                        .rotate(90f),
-                    tint = MaterialTheme.colorScheme.primary
+                        .size(20.dp)
+                        .rotate(270f),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
-
-        Spacer(modifier = Modifier.weight(1f))
 
         navigationItems.forEach { screen ->
             val isSelected = remember(currentRoute, screen.route) {
@@ -158,16 +160,15 @@ fun AppNavigationRail(
                     }
                     .padding(vertical = 8.dp)
             ) {
-                if (isSelected) {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .padding(end = 4.dp)
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    tint = if (isSelected) MaterialTheme.colorScheme.primary
+                           else Color.Transparent,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(end = 4.dp)
+                )
                 BasicText(
                     text = stringResource(screen.titleId),
                     style = MaterialTheme.typography.labelLarge.copy(
@@ -182,8 +183,6 @@ fun AppNavigationRail(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 

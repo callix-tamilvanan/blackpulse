@@ -692,7 +692,8 @@ fun HomeScreen(
     val accountName by viewModel.accountName.collectAsStateWithLifecycle()
     val accountImageUrl by viewModel.accountImageUrl.collectAsStateWithLifecycle()
     val innerTubeCookie by rememberPreference(InnerTubeCookieKey, "")
-    val (randomizeHomeOrder) = rememberPreference(RandomizeHomeOrderKey, true)
+    val (randomizeHomeOrderStored) = rememberPreference(RandomizeHomeOrderKey, false)
+    val randomizeHomeOrder = false // Forced off — QuickPicks must stay first
     val autoRadioQueue by rememberPreference(AutoRadioQueueKey, defaultValue = true)
 
     LaunchedEffect(Unit) { viewModel.loadHomeData() }
@@ -1042,13 +1043,17 @@ fun HomeScreen(
             val list = mutableListOf<HomeSection>()
             val chipActive = selectedChip != null
 
-            if (!chipActive && speedDialItems.isNotEmpty()) list.add(HomeSection.SpeedDial)
-            if (!chipActive && quickPicks?.isNotEmpty() == true) list.add(HomeSection.QuickPicks)
-            if (!chipActive && communityPlaylists?.isNotEmpty() == true) list.add(HomeSection.FromTheCommunity)
-            if (!chipActive && dailyDiscover?.isNotEmpty() == true) list.add(HomeSection.DailyDiscover)
-            if (!chipActive && keepListening?.isNotEmpty() == true) list.add(HomeSection.KeepListening)
-            if (!chipActive && accountPlaylists?.isNotEmpty() == true) list.add(HomeSection.AccountPlaylists)
-            if (!chipActive && forgottenFavorites?.isNotEmpty() == true) list.add(HomeSection.ForgottenFavorites)
+            if (!chipActive) {
+                // Always add sections in the defined order — even when data is empty.
+                // This keeps the section order stable while data loads (no glitching).
+                list.add(HomeSection.QuickPicks)
+                list.add(HomeSection.SpeedDial)
+                list.add(HomeSection.FromTheCommunity)
+                list.add(HomeSection.DailyDiscover)
+                list.add(HomeSection.KeepListening)
+                list.add(HomeSection.AccountPlaylists)
+                list.add(HomeSection.ForgottenFavorites)
+            }
 
             if (!chipActive) {
                 similarRecommendations?.indices?.forEach { i ->
@@ -1117,13 +1122,13 @@ fun HomeScreen(
             } else {
                 val defaultOrder =
                     mapOf(
+                        HomeSection.QuickPicks to 200,
                         HomeSection.SpeedDial to 100,
-                        HomeSection.QuickPicks to 90,
-                        HomeSection.FromTheCommunity to 80,
-                        HomeSection.DailyDiscover to 70,
-                        HomeSection.KeepListening to 60,
-                        HomeSection.AccountPlaylists to 50,
-                        HomeSection.ForgottenFavorites to 40,
+                        HomeSection.FromTheCommunity to 90,
+                        HomeSection.DailyDiscover to 80,
+                        HomeSection.KeepListening to 70,
+                        HomeSection.AccountPlaylists to 60,
+                        HomeSection.ForgottenFavorites to 50,
                         HomeSection.MoodAndGenres to 10,
                     )
 
