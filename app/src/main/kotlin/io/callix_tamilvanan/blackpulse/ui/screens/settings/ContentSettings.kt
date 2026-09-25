@@ -103,7 +103,8 @@ import java.net.Proxy
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentSettings(
-    navController: NavController
+    navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
@@ -739,9 +740,9 @@ fun ContentSettings(
 
     Column(
         Modifier
-            .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp),
     ) {
         Material3SettingsGroup(
             title = stringResource(R.string.general),
@@ -1114,18 +1115,20 @@ fun ContentSettings(
         Spacer(modifier = Modifier.height(16.dp))
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.content)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.content)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.arrow_back),
+                        contentDescription = null,
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }

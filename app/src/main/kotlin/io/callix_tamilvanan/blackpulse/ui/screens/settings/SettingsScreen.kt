@@ -113,6 +113,12 @@ fun SettingsScreen(
                         showTopBar = false,
                     )
                 }
+                SettingsSection.CONTENT -> {
+                    ContentSettings(
+                        navController = navController,
+                        showTopBar = false,
+                    )
+                }
                 else -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
