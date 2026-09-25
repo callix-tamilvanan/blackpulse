@@ -54,7 +54,8 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdaterScreen(
-    navController: NavController
+    navController: NavController,
+    showTopBar: Boolean = true,
 ) {
     val (checkForUpdates, onCheckForUpdatesChange) = rememberPreference(CheckForUpdatesKey, true)
     val (updateNotifications, onUpdateNotificationsChange) = rememberPreference(UpdateNotificationsEnabledKey, true)
@@ -100,17 +101,10 @@ fun UpdaterScreen(
                         WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom,
                     ),
                 ).verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top,
-                ),
-            ),
-        )
-
         Spacer(Modifier.height(4.dp))
 
         Material3SettingsGroup(
@@ -242,18 +236,20 @@ fun UpdaterScreen(
         Spacer(Modifier.height(32.dp))
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.updater)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
-            }
-        },
-    )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.updater)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_back),
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+    }
 }

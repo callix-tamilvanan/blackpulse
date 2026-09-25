@@ -18,5 +18,5 @@ enum class SettingsSection(
     PRIVACY("Privacy", null),
     STORAGE("Storage", null),
     BACKUP("Backup", null),
-    UPDATER("Updater", "settings/updater"),
+    UPDATER("Updater", null),
 }
