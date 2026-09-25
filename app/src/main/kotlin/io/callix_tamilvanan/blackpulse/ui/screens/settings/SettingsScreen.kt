@@ -101,6 +101,12 @@ fun SettingsScreen(
                         showTopBar = false,
                     )
                 }
+                SettingsSection.BACKUP -> {
+                    BackupAndRestore(
+                        navController = navController,
+                        showTopBar = false,
+                    )
+                }
                 else -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),

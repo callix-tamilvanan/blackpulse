@@ -76,6 +76,7 @@ import java.time.format.DateTimeFormatter
 fun BackupAndRestore(
     navController: NavController,
     viewModel: BackupRestoreViewModel = hiltViewModel(),
+    showTopBar: Boolean = true,
 ) {
     var importedTitle by remember { mutableStateOf("") }
     val importedSongs = remember { mutableStateListOf<Song>() }
@@ -164,18 +165,13 @@ fun BackupAndRestore(
         Modifier
             .windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp),
     ) {
-        Spacer(
-            Modifier.windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current.only(
-                    WindowInsetsSides.Top,
-                ),
-            ),
-        )
 
         val appName = stringResource(R.string.app_name)
         Material3SettingsGroup(
+            title = stringResource(R.string.backup_restore),
             items =
                 listOf(
                     Material3SettingsItem(
@@ -217,20 +213,22 @@ fun BackupAndRestore(
         )
     }
 
-    TopAppBar(
-        title = { Text(stringResource(R.string.backup_restore)) },
-        navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
-                Icon(
-                    painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
-            }
-        },
-    )
+    if (showTopBar) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.backup_restore)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.arrow_back),
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+    }
 
     AddToPlaylistDialogOnline(
         isVisible = showChoosePlaylistDialogOnline,
