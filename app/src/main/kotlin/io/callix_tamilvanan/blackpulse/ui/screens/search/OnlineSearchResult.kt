@@ -114,6 +114,7 @@ import io.callix_tamilvanan.blackpulse.utils.rememberPreference
 import io.callix_tamilvanan.blackpulse.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.Row
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -448,45 +449,25 @@ fun OnlineSearchResult(
         )
 
         // Main content area below search bar
-        Box(modifier = Modifier.weight(1f)) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                val visibleChips =
-                    listOf(
-                        null to stringResource(R.string.filter_all),
-                        FILTER_SONG to stringResource(R.string.filter_songs),
-                    ).let { baseChips ->
-                        if (!hideVideoSongs) {
-                            baseChips + (FILTER_VIDEO to stringResource(R.string.filter_videos))
-                        } else {
-                            baseChips
-                        }
-                    } +
-                        listOf(
-                            FILTER_ALBUM to stringResource(R.string.filter_albums),
-                            FILTER_ARTIST to stringResource(R.string.filter_artists),
-                            FILTER_COMMUNITY_PLAYLIST to stringResource(R.string.filter_community_playlists),
-                            FILTER_FEATURED_PLAYLIST to stringResource(R.string.filter_featured_playlists),
-                            FILTER_PODCAST to stringResource(R.string.filter_podcasts),
-                            FILTER_EPISODE to stringResource(R.string.filter_episodes),
-                            FILTER_PROFILE to stringResource(R.string.filter_profiles),
-                        )
+        Row(modifier = Modifier.weight(1f)) {
+            SearchNavigationRail(
+                selected = searchFilter,
+                onSelect = { filter ->
+                    if (viewModel.filter.value != filter) {
+                        viewModel.filter.value = filter
+                    }
+                    coroutineScope.launch {
+                        lazyListState.animateScrollToItem(0)
+                    }
+                },
+                onSettingsClick = {
+                    navController.navigate("settings") {
+                        launchSingleTop = true
+                    }
+                },
+            )
 
-                ChipsRow(
-                    chips = visibleChips,
-                    currentValue = searchFilter,
-                    onValueUpdate = {
-                        if (viewModel.filter.value != it) {
-                            viewModel.filter.value = it
-                        }
-                        coroutineScope.launch {
-                            lazyListState.animateScrollToItem(0)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
+            Box(modifier = Modifier.weight(1f)) {
                 LazyColumn(
                     state = lazyListState,
                     modifier = Modifier.fillMaxWidth(),
@@ -553,8 +534,7 @@ fun OnlineSearchResult(
                         Spacer(modifier = Modifier.height(MiniPlayerHeight + MiniPlayerBottomSpacing + NavigationBarHeight))
                     }
                 }
-            }
-            if (isSearchFocused) {
+                if (isSearchFocused) {
                 OnlineSearchScreen(
                     query = query.text,
                     onQueryChange = { query = it },
@@ -566,11 +546,12 @@ fun OnlineSearchResult(
                     pureBlack = pureBlack,
                 )
             }
-            HideOnScrollFAB(
-                lazyListState = lazyListState,
-                icon = R.drawable.mic,
-                onClick = { navController.navigate("recognition") },
-            )
+                HideOnScrollFAB(
+                    lazyListState = lazyListState,
+                    icon = R.drawable.mic,
+                    onClick = { navController.navigate("recognition") },
+                )
+            }
         }
     }
 }

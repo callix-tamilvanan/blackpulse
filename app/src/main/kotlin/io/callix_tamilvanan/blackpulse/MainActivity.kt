@@ -812,7 +812,10 @@ class MainActivity : FragmentActivity() {
                 }
 
                 val inSearchScreen by remember {
-                    derivedStateOf { currentRoute?.startsWith("search/") == true }
+                    derivedStateOf {
+                        currentRoute?.startsWith("search/") == true ||
+                        currentRoute == "search_input"
+                    }
                 }
                 val navigationItemRoutes =
                     remember(navigationItems) {
@@ -1258,7 +1261,7 @@ class MainActivity : FragmentActivity() {
                                     }
                                 }
 
-                            if (showRail && currentRoute != "wrapped") {
+                            if (showRail && currentRoute != "wrapped" && !inSearchScreen) {
                                 if (currentRoute == "settings") {
                                     val context = androidx.compose.ui.platform.LocalContext.current
                                     val hasAndroidAuto = remember {
