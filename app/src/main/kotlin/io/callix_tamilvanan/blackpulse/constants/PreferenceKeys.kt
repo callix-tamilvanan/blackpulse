@@ -1,5 +1,5 @@
 /**
- * Metrolist Project (C) 2026
+ * Black Pulse (C) 2026
  * Licensed under GPL-3.0 | See git history for contributors
  */
 
@@ -118,6 +118,7 @@ val AudioTrackPlaybackParamsKey = booleanPreferencesKey("audioTrackPlaybackParam
 val VarispeedKey = booleanPreferencesKey("varispeed")
 
 val PersistentQueueKey = booleanPreferencesKey("persistentQueue")
+val LastPlayedSongIdKey = stringPreferencesKey("lastPlayedSongId")
 val PersistentShuffleAcrossQueuesKey = booleanPreferencesKey("persistentShuffleAcrossQueues")
 val RememberShuffleAndRepeatKey = booleanPreferencesKey("rememberShuffleAndRepeat")
 val ShuffleModeKey = booleanPreferencesKey("shuffleMode")

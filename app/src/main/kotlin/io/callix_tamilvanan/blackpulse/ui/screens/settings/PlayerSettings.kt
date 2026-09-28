@@ -1,5 +1,5 @@
 /**
- * Metrolist Project (C) 2026
+ * Black Pulse (C) 2026
  * Licensed under GPL-3.0 | See git history for contributors
  */
 
@@ -740,27 +740,7 @@ fun PlayerSettings(
         Material3SettingsGroup(
             title = stringResource(R.string.queue),
             items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.queue_music),
-                    title = { Text(stringResource(R.string.persistent_queue)) },
-                    description = { Text(stringResource(R.string.persistent_queue_desc)) },
-                    trailingContent = {
-                        Switch(
-                            checked = persistentQueue,
-                            onCheckedChange = onPersistentQueueChange,
-                            thumbContent = {
-                                Icon(
-                                    painter = painterResource(
-                                        id = if (persistentQueue) R.drawable.check else R.drawable.close
-                                    ),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(SwitchDefaults.IconSize)
-                                )
-                            }
-                        )
-                    },
-                    onClick = { onPersistentQueueChange(!persistentQueue) }
-                ),
+                // Persistent queue toggle removed — always disabled to prevent notification issues.
                 Material3SettingsItem(
                     icon = painterResource(R.drawable.playlist_add),
                     title = { Text(stringResource(R.string.auto_load_more)) },

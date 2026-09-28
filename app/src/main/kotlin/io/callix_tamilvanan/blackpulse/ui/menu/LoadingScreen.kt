@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 /**
- * Metrolist Project (C) 2026
+ * Black Pulse (C) 2026
  * Licensed under GPL-3.0 | See git history for contributors
  */
 

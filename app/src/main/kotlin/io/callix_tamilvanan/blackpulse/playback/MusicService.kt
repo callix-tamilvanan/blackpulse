@@ -1,5 +1,5 @@
 /**
- * Metrolist Project (C) 2026
+ * Black Pulse (C) 2026
  * Licensed under GPL-3.0 | See git history for contributors
  */
 
@@ -149,6 +149,7 @@ import io.callix_tamilvanan.blackpulse.constants.MediaSessionConstants.CommandTo
 import io.callix_tamilvanan.blackpulse.constants.PauseListenHistoryKey
 import io.callix_tamilvanan.blackpulse.constants.PauseOnMute
 import io.callix_tamilvanan.blackpulse.constants.PersistentQueueKey
+import io.callix_tamilvanan.blackpulse.constants.LastPlayedSongIdKey
 import io.callix_tamilvanan.blackpulse.constants.PersistentShuffleAcrossQueuesKey
 import io.callix_tamilvanan.blackpulse.constants.PlayerVolumeKey
 import io.callix_tamilvanan.blackpulse.constants.PreventDuplicateTracksInQueueKey
@@ -255,6 +256,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.random.Random
 import java.util.Collections
+import androidx.datastore.preferences.core.edit
 
 private const val INSTANT_SILENCE_SKIP_STEP_MS = 15_000L
 private const val INSTANT_SILENCE_SKIP_SETTLE_MS = 350L
@@ -686,6 +688,47 @@ class MusicService :
 
         playerInitialized.value = true
         Timber.tag(TAG).d("Player successfully initialized")
+
+        // Save last played song ID whenever media metadata changes
+        scope.launch {
+            currentMediaMetadata
+                .map { it?.id }
+                .distinctUntilChanged()
+                .collect { songId ->
+                    if (songId != null) {
+                        runCatching {
+                            dataStore.edit { prefs ->
+                                prefs[LastPlayedSongIdKey] = songId
+                            }
+                        }
+                    }
+                }
+        }
+
+        // Load last played song on startup if queue is empty
+        scope.launch {
+            delay(500)
+            if (player.mediaItemCount == 0) {
+                val lastId = runCatching {
+                    dataStore.data.first()[LastPlayedSongIdKey]
+                }.getOrNull()
+
+                if (lastId != null) {
+                    runCatching {
+                        val song = database.song(lastId).first()
+                        if (song != null) {
+                            val mediaItem = song.toMediaItem()
+                            player.setMediaItem(mediaItem)
+                            player.prepare()
+                            player.playWhenReady = false
+                            Timber.tag(TAG).d("Loaded last played song: $lastId")
+                        }
+                    }.onFailure { e ->
+                        Timber.tag(TAG).w(e, "Failed to load last played song")
+                    }
+                }
+            }
+        }
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         setupAudioFocusRequest()
@@ -1151,7 +1194,7 @@ class MusicService :
 
         // Observe and cache common preferences to avoid runBlocking reads in playback callbacks
         scope.launch {
-            dataStore.data.map { it[PersistentQueueKey] ?: true }.distinctUntilChanged().collect { cachedPersistentQueue = it }
+            dataStore.data.map { false }.distinctUntilChanged().collect { cachedPersistentQueue = it }
         }
         scope.launch {
             dataStore.data.map { it[AutoplayKey] ?: true }.distinctUntilChanged().collect { cachedAutoplay = it }
@@ -1171,7 +1214,7 @@ class MusicService :
         scope.launch {
             dataStore.data.map { it[AutoLoadMoreKey] ?: true }.distinctUntilChanged().collect { cachedAutoLoadMore = it }
         }
-        if (startupPrefs!![PersistentQueueKey] ?: true) {
+        if (false) {
             val queueFile = filesDir.resolve(PERSISTENT_QUEUE_FILE)
             if (queueFile.exists()) {
                 runCatching {
@@ -4259,7 +4302,7 @@ class MusicService :
         }
         audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
         castConnectionHandler?.release()
-        if (dataStore.get(PersistentQueueKey, true)) {
+        if (false) {
             saveQueueToDisk()
         }
         screenOffHandler.removeCallbacks(screenOffTimeout)
