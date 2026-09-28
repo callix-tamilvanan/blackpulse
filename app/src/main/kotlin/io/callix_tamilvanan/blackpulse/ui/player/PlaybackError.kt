@@ -194,7 +194,7 @@ fun PlaybackError(
             OutlinedButton(
                 onClick = {
                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    clipboard.setPrimaryClip(ClipData.newPlainText("Metrolist Playback Error", errorReport))
+                    clipboard.setPrimaryClip(ClipData.newPlainText("Black Pulse Playback Error", errorReport))
                 },
                 shape = RoundedCornerShape(20.dp),
             ) {
@@ -227,7 +227,7 @@ private fun buildPlaybackErrorReport(
     streamClient: String?,
 ): String =
     buildString {
-        appendLine("Metrolist Playback Error Report")
+        appendLine("Black Pulse Playback Error Report")
         appendLine("================================")
         appendLine("Time: ${Instant.ofEpochMilli(error.timestampMs)}")
         appendLine("App version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
