@@ -47,6 +47,7 @@ Grab the latest APK from the [Releases page](https://github.com/callix-tamilvana
 ---
 
 ## Credits
+
 **Foundation:**
 - [InnerTune](https://github.com/z-huang/InnerTune) by Zion Huang (Hong) and contributors — original architecture, innertube module, and player infrastructure
 
