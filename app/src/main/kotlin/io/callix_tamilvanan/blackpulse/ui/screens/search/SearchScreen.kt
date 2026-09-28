@@ -281,11 +281,11 @@ fun SearchScreen(
                 },
                 colors =
                     TopAppBarDefaults.topAppBarColors(
-                        containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer,
+                        containerColor = Color.Transparent,
                     ),
             )
         },
-        containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.background,
+        containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surface,
     ) { paddingValues ->
         Box(
             modifier =
