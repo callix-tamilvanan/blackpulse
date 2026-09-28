@@ -118,3 +118,6 @@ app/src/main/cpp/coverart/
 .mcp.json
 *.har
 *.bak
+keystore.properties
+*.jks
+*.keystore

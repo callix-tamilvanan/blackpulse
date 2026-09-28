@@ -7,6 +7,13 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 
+// Release keystore configuration
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
+}
+
 val baseApplicationId = "io.callix_tamilvanan.blackpulse"
 val applicationIdOverride = System.getenv("BLACKPULSE_APPLICATION_ID")?.takeIf { it.isNotBlank() }
 val appNameOverride = System.getenv("METROLIST_APP_NAME")?.takeIf { it.isNotBlank() }
@@ -103,10 +110,12 @@ android {
             keyPassword = debugKeyPassword
         }
         create("release") {
-            storeFile = file("keystore/release.keystore")
-            storePassword = System.getenv("STORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            if (keystorePropertiesFile.exists()) {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
         }
         getByName("debug") {
             keyAlias = "androiddebugkey"
@@ -122,6 +131,7 @@ android {
             isShrinkResources = true
             isCrunchPngs = false
             isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
