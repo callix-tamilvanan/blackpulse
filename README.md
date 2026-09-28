@@ -2,7 +2,7 @@
 
 ### A free and open-source music player for Android
 
-Black Pulse is a fork of [Metrolist](https://github.com/MetrolistGroup/Metrolist), which is built on [InnerTune](https://github.com/z-huang/InnerTune).
+Black Pulse is a fork of [Metrolist](https://github.com/MetrolistGroup/Metrolist), which is built on [InnerTune](https://github.com/z-huang/InnerTune). The vertical rail navigation and dynamic color treatment are inspired by [ViMusic](https://github.com/vfsfitvnm/ViMusic).
 
 ---
 
@@ -47,9 +47,17 @@ Grab the latest APK from the [Releases page](https://github.com/callix-tamilvana
 ---
 
 ## Credits
-Based on Metrolist by Mo Agamy and contributors.
+**Foundation:**
+- [InnerTune](https://github.com/z-huang/InnerTune) by Zion Huang (Hong) and contributors — original architecture, innertube module, and player infrastructure
 
-Based on InnerTune by Zion Huang (Hong) and contributors.
+**Direct base:**
+- [Metrolist](https://github.com/MetrolistGroup/Metrolist) by Mo Agamy and contributors — the fork Black Pulse is built on
+
+**Design inspiration:**
+- [ViMusic](https://github.com/vfsfitvnm/ViMusic) by vfsfitvnm — inspired the vertical rail navigation, transparent UI, and dynamic color treatment
+
+**Black Pulse:**
+- Callix Tamilvanan — full navigation rebuild, Settings rail, Home customization, Library redesign, updater, website, and branding
 
 Thank you to the entire open-source community.
 
