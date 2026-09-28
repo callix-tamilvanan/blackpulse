@@ -396,11 +396,7 @@ fun AboutScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = "Based on Metrolist by Mo Agamy",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                // Metrolist credit moved to README (source code copyright preserved)
                 Text(
                     text = "Built on InnerTune by Zion Huang",
                     style = MaterialTheme.typography.bodySmall,
